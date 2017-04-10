@@ -54,6 +54,10 @@
     +++++ 4     Case #2: 0
     -+-+- 4     Case #3: IMPOSSIBLE
     """
+
+__author__ = "Krzysztof Kutt"
+__copyright__ = "Copyright 2017, Krzysztof Kutt"
+
 import sys
 import io
 
@@ -79,6 +83,3 @@ if __name__ == '__main__':
     for case in range(1, t + 1):
         row, length = input().split(" ")
         print("Case #{}: {}".format(case, flip_pancakes(row, int(length))))
-
-__author__ = "Krzysztof Kutt"
-__copyright__ = "Copyright 2017, Krzysztof Kutt"

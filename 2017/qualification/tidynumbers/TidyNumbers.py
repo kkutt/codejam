@@ -38,6 +38,10 @@
     111111111111111110  Case #4: 99999999999999999
     Note that the last sample case would not appear in the Small dataset.
     """
+
+__author__ = "Krzysztof Kutt"
+__copyright__ = "Copyright 2017, Krzysztof Kutt"
+
 import sys
 import io
 
@@ -72,6 +76,3 @@ if __name__ == '__main__':
     t = int(input())  # read a line with a single integer
     for case in range(1, t + 1):
         print("Case #{}: {}".format(case, find_tidy_number(input())))
-
-__author__ = "Krzysztof Kutt"
-__copyright__ = "Copyright 2017, Krzysztof Kutt"
