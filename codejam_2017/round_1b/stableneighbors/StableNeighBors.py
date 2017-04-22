@@ -140,12 +140,22 @@ def arrange_unicorns(count, unicorns):
     # current stall
     current = 0
 
-    # start with the ones that have the biggest number (to ensure that the
+    # start with the color that have the biggest number (to ensure that the
     # last won't be near the first one from this color)
-    index = 0
-    for uni in range(1, len(unicorns)):
-        if unicorns[uni] > unicorns[index]:
-            index = uni
+    if RR > YY and RR > BB:
+        index = 5
+    elif YY > RR and YY > BB:
+        index = 1
+    elif BB > RR and BB > YY:
+        index = 3
+    else:
+        index = 0
+        for uni in range(1, len(unicorns)):
+            if unicorns[uni] > unicorns[index]:
+                index = uni
+        while index not in [1, 3, 5]:
+            index = index-1 if index-1 >= 0 else 5
+    # print("Index {} = {}".format(index, letters[index]))
 
     # set them every 2 places so the ones with the same color (even if they
     # have two colors!) won't be neighbours
@@ -156,6 +166,11 @@ def arrange_unicorns(count, unicorns):
         index = index+1 if index+1 < len(unicorns) else 0
 
     if not check_sequence(sequence):
+        # print("{} {}".format(unicorns, count/2))
+
+        # FIXME It does not work! My solution sometimes generates bad
+        # sequences (the first and the last one are the same; sometimes it is
+        # moved, but the problem is always the same)
         return "IMPOSSIBLE"
 
     return "".join(sequence)
