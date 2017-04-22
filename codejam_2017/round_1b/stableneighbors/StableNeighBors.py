@@ -74,15 +74,11 @@
 # In sample case #4, no two unicorns with yellow manes can be neighbors,
 # and no two unicorns with violet manes can be neighbors.
 
-# FIXME: This solution is not working for the large dataset - it hangs
-# somewhere while sorting unicorns...
-
 __author__ = "Krzysztof Kutt"
 __copyright__ = "Copyright 2017, Krzysztof Kutt"
 
 import sys
 import io
-import struct
 
 
 def are_equal(elem1, elem2):
@@ -111,26 +107,13 @@ def are_equal(elem1, elem2):
     return False
 
 
-def sort_unicorns(sequence_in):
-    # convert to list to swap letters in place
-    sequence_ = []
-    for character in sequence_in:
-        sequence_.append(character)
-
-    not_sorted = True
-    while not_sorted:
-        not_sorted = False
-        if are_equal(sequence_[0], sequence_[-1]):
-            not_sorted = True
-            sequence_[1], sequence_[0] = sequence_[0], sequence_[1]
-        for i in range(1, len(sequence_)-1):
-            if are_equal(sequence_[i-1], sequence_[i]):
-                not_sorted = True
-                sequence_[i+1], sequence_[i] = sequence_[i], sequence_[i+1]
-        if are_equal(sequence_[-2], sequence_[-1]):
-            not_sorted = True
-            sequence_[-1], sequence_[0] = sequence_[0], sequence_[-1]
-    return "".join(sequence_)
+def check_sequence(sequence):
+    for i in range(len(sequence)-1):
+        if are_equal(sequence[i], sequence[i+1]):
+            return False
+    if are_equal(sequence[-1], sequence[0]):
+        return False
+    return True
 
 
 def arrange_unicorns(count, unicorns):
@@ -142,7 +125,6 @@ def arrange_unicorns(count, unicorns):
     :return: arrangement or "IMPOSSIBLE" if it is impossible to do this
     """
     R, O, Y, G, B, V = unicorns
-
     RR = V + R + O
     YY = O + Y + G
     BB = G + B + V
@@ -151,10 +133,32 @@ def arrange_unicorns(count, unicorns):
         # there is no possibility to arrange them
         return "IMPOSSIBLE"
 
-    sequence = "G" * G + "O" * O + "V" * V + "R" * R + "B" * B + "Y" * Y
-    sequence = sort_unicorns(sequence)
+    letters = ["R", "O", "Y", "G", "B", "V"]
 
-    return sequence if True else "IMPOSSIBLE"
+    # generate empty stable
+    sequence = [""] * count
+    # current stall
+    current = 0
+
+    # start with the ones that have the biggest number (to ensure that the
+    # last won't be near the first one from this color)
+    index = 0
+    for uni in range(1, len(unicorns)):
+        if unicorns[uni] > unicorns[index]:
+            index = uni
+
+    # set them every 2 places so the ones with the same color (even if they
+    # have two colors!) won't be neighbours
+    for _1 in range(len(unicorns)):
+        for _2 in range(unicorns[index]):
+            sequence[current] = letters[index]
+            current = current+2 if current+2 < count else 1
+        index = index+1 if index+1 < len(unicorns) else 0
+
+    if not check_sequence(sequence):
+        return "IMPOSSIBLE"
+
+    return "".join(sequence)
 
 
 if __name__ == '__main__':
